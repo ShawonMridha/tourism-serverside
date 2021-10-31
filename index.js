@@ -24,9 +24,19 @@ async function run() {
         const database = client.db('onlineTour');
         const productsCollection = database.collection('products');
         const spotCollection = database.collection('tourist');
+        const addserviceCollection = database.collection('service');
+        const clientCollection = database.collection('client');
 
         app.get('/products', async(req, res) => {
           const cursor = productsCollection.find({});
+          const products = await cursor.toArray();
+          res.send(products)
+        })
+
+
+        //client get api
+        app.get('/client', async(req, res) => {
+          const cursor = clientCollection.find({});
           const products = await cursor.toArray();
           res.send(products)
         })
@@ -62,6 +72,22 @@ async function run() {
           const result = await spotCollection.deleteOne(query)
         res.json(result);
       })
+
+
+      //Add new service
+      app.post('/service', async(req, res) => {
+        const buy = req.body;
+        const item = await addserviceCollection.insertOne(buy);
+        res.json(item);
+      });
+
+
+      app.get('/service', async(req, res) => {
+        const cursor = addserviceCollection.find({});
+        const products = await cursor.toArray();
+        res.send(products)
+      })
+
 
     }
     finally{
